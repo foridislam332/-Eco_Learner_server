@@ -29,8 +29,18 @@ async function run() {
 
         const classesCollection = client.db('eco_learner').collection('classes');
 
+        // get all classes
         app.get('/classes', async (req, res) => {
             const cursor = classesCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
+        // get instructor classes
+        app.get('/instructors/:instructor', async (req, res) => {
+            const instructor = req.params.instructor;
+            const query = { instructor: instructor }
+            const cursor = classesCollection.find(query);
             const result = await cursor.toArray();
             res.send(result)
         })
