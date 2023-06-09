@@ -28,6 +28,7 @@ async function run() {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
         const classesCollection = client.db('eco_learner').collection('classes');
+        const selectedClassCollection = client.db('eco_learner').collection('selected_classes');
 
         // get all classes
         app.get('/classes', async (req, res) => {
@@ -42,6 +43,13 @@ async function run() {
             const query = { instructor: instructor }
             const cursor = classesCollection.find(query);
             const result = await cursor.toArray();
+            res.send(result)
+        })
+
+        // post selected classes
+        app.post('/selectedClasses', async (req, res) => {
+            const item = req.body;
+            const result = await selectedClassCollection.insertOne(item);
             res.send(result)
         })
 
