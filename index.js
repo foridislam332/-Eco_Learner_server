@@ -37,12 +37,34 @@ async function run() {
             res.send(result)
         })
 
+        // get single user
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const result = await usersClassCollection.findOne(query);
+            res.send(result)
+        })
+
         // post user
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersClassCollection.insertOne(user);
             res.send(result)
         })
+
+        // update user role
+        app.patch('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email }
+            const updatedRole = req.query.role;
+            const updateDoc = {
+                $set: {
+                    role: updatedRole,
+                }
+            };
+            const result = await usersClassCollection.updateOne(filter, updateDoc);
+            res.send(result)
+        });
 
         // get all classes
         app.get('/classes', async (req, res) => {
