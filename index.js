@@ -61,6 +61,27 @@ async function run() {
             res.send(result)
         })
 
+        // update my classes
+        app.patch('/classes/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const filter = { _id: new ObjectId(id) }
+            const updatedClass = req.body;
+            const updateDoc = {
+                $set: {
+                    name: updatedClass.name,
+                    instructor: updatedClass.instructor,
+                    instructorImage: updatedClass.instructorImage,
+                    image: updatedClass.image,
+                    des: updatedClass.des,
+                    price: updatedClass.price,
+                    seats: updatedClass.seats
+                },
+            };
+            const result = await classesCollection.updateOne(filter, updateDoc);
+            res.send(result)
+        });
+
         // get instructor classes
         app.get('/instructors/:instructor', async (req, res) => {
             const instructor = req.params.instructor;
