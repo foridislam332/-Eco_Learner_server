@@ -29,6 +29,14 @@ async function run() {
 
         const classesCollection = client.db('eco_learner').collection('classes');
         const selectedClassCollection = client.db('eco_learner').collection('selected_classes');
+        const usersClassCollection = client.db('eco_learner').collection('users');
+
+        // post user
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersClassCollection.insertOne(user);
+            res.send(result)
+        })
 
         // get all classes
         app.get('/classes', async (req, res) => {
