@@ -61,10 +61,9 @@ async function run() {
             res.send(result)
         })
 
-        // update my classes
+        // update my class
         app.patch('/classes/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id)
             const filter = { _id: new ObjectId(id) }
             const updatedClass = req.body;
             const updateDoc = {
@@ -79,6 +78,21 @@ async function run() {
                 },
             };
             const result = await classesCollection.updateOne(filter, updateDoc);
+            res.send(result)
+        });
+
+        // update class status
+        app.patch('/manageClasses/:id', async (req, res) => {
+            const id = req.params.id;
+            const option = { upsert: true };
+            const filter = { _id: new ObjectId(id) }
+            const updatedStatus = req.query.status;
+            const updateDoc = {
+                $set: {
+                    status: updatedStatus,
+                }
+            };
+            const result = await classesCollection.updateOne(filter, updateDoc, option);
             res.send(result)
         });
 
