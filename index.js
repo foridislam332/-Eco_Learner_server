@@ -37,6 +37,15 @@ async function run() {
             res.send(result)
         })
 
+        // get my classes
+        app.get('/myClasses', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = classesCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
         // post classes
         app.post('/classes', async (req, res) => {
             const item = req.body;
@@ -57,7 +66,6 @@ async function run() {
         app.get('/selectedClasses', async (req, res) => {
             const email = req.query.email;
             const query = { email: email }
-            console.log(query)
             const result = await selectedClassCollection.find(query).toArray();
             res.send(result)
         })
