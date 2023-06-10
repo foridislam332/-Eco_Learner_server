@@ -133,13 +133,14 @@ async function run() {
         });
 
         // send feedback
-        app.patch('/manageClasses/:id', async (req, res) => {
+        app.patch('/manageFeedback/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
             const feedback = req.query.feedback;
+            console.log(feedback)
             const updateDoc = {
                 $set: {
-                    status: feedback,
+                    feedback: feedback,
                 }
             };
             const result = await classesCollection.updateOne(filter, updateDoc);
