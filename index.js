@@ -307,6 +307,21 @@ async function run() {
             res.send(result)
         })
 
+        // get enrolled student
+        app.get('/enrollStudent/:email', verifyJWT, async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const enrolled = await paymentCollection.find(query).toArray();
+
+            const classIds = enrolled.map(item => new ObjectId(item.classId));
+
+            const classesQuery = { _id: { $in: classIds } };
+            const classesCursor = classesCollection.find(classesQuery);
+            const result = await classesCursor.toArray();
+
+            res.send(result);
+        });
+
         // enroll student
         app.patch('/enrollStudent/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
