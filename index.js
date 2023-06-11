@@ -282,6 +282,16 @@ async function run() {
             });
         });
 
+        // get payment history
+        app.get('/payments/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const options = { sort: { date: -1 } };
+            const cursor = paymentCollection.find(query, options);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
         // save payment
         app.post('/payments', async (req, res) => {
             const payment = req.body;
