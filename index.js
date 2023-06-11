@@ -94,7 +94,7 @@ async function run() {
         })
 
         // get instructor
-        app.get('/users/instructor/:email', verifyJWT, async (req, res) => {
+        app.get('/users/instructor/:email', async (req, res) => {
             const email = req.params.email;
 
             if (req.decoded.email !== email) {
@@ -104,7 +104,6 @@ async function run() {
             const query = { email: email }
             const user = await usersCollection.findOne(query);
             const result = { instructor: user?.role === 'instructor' }
-            console.log(result)
             res.send(result);
         })
 
@@ -136,7 +135,7 @@ async function run() {
         })
 
         // update user role
-        app.patch('/users/:email', async (req, res) => {
+        app.patch('/users/:email', verifyJWT, verifyAdmin, async (req, res) => {
             const email = req.params.email;
             const filter = { email: email }
             const updatedRole = req.query.role;
@@ -174,14 +173,14 @@ async function run() {
         })
 
         // post classes
-        app.post('/classes', async (req, res) => {
+        app.post('/classes', verifyJWT, verifyInstructor, async (req, res) => {
             const item = req.body;
             const result = await classesCollection.insertOne(item);
             res.send(result)
         })
 
         // update my class
-        app.patch('/classes/:id', async (req, res) => {
+        app.patch('/classes/:id', verifyJWT, verifyInstructor, async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
             const updatedClass = req.body;
@@ -201,7 +200,7 @@ async function run() {
         });
 
         // update class status
-        app.patch('/manageClasses/:id', async (req, res) => {
+        app.patch('/manageClasses/:id', verifyJWT, verifyAdmin, async (req, res) => {
             const id = req.params.id;
             const option = { upsert: true };
             const filter = { _id: new ObjectId(id) }
@@ -216,7 +215,7 @@ async function run() {
         });
 
         // send feedback
-        app.patch('/manageFeedback/:id', async (req, res) => {
+        app.patch('/manageFeedback/:id', verifyJWT, verifyAdmin, async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
             const feedback = req.query.feedback;
@@ -248,14 +247,14 @@ async function run() {
         })
 
         // post selected classes
-        app.post('/selectedClasses', async (req, res) => {
+        app.post('/selectedClasses', verifyJWT, async (req, res) => {
             const item = req.body;
             const result = await selectedClassCollection.insertOne(item);
             res.send(result)
         })
 
         // delete selected class
-        app.delete('/selectedClasses/:id', async (req, res) => {
+        app.delete('/selectedClasses/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await selectedClassCollection.deleteOne(query);
