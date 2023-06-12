@@ -283,7 +283,7 @@ async function run() {
         });
 
         // get payment history
-        app.get('/payments/:email', async (req, res) => {
+        app.get('/payments/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
             const options = { sort: { date: -1 } };
